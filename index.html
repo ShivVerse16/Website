@@ -3,213 +3,313 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prinaince Library - Official App</title>
+    <title>Shiv Verse - Official App</title>
     <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        /* --- 2025 Dark Theme UI --- */
+        /* --- 2026 Future Glass Theme --- */
         :root {
-            --bg-dark: #0a0a0f;
-            --bg-card: #13131f;
-            --primary: #6366f1; /* Indigo */
-            --accent: #d946ef; /* Pink */
+            --bg-gradient: radial-gradient(circle at top left, #1a1a2e, #16213e, #0f3460);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary: #4cc9f0; /* Neon Cyan */
+            --accent: #f72585;  /* Neon Pink */
             --text-main: #ffffff;
-            --text-muted: #94a3b8;
-            --border: rgba(255, 255, 255, 0.08);
-            --nav-bg: rgba(20, 20, 30, 0.90);
+            --text-muted: #a0a0a0;
+            --dock-bg: rgba(15, 15, 25, 0.9);
+            --body-bg: #050505;
         }
 
         html { scroll-behavior: smooth; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); padding-bottom: 100px; }
+        
+        body { 
+            background: var(--body-bg);
+            background-image: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main); 
+            padding-bottom: 120px; 
+            min-height: 100vh;
+        }
 
         /* --- Header --- */
-        .header { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.5rem; font-weight: 700; color: white; display: flex; align-items: center; gap: 10px; }
-        .logo i { color: var(--primary); }
+        .header { padding: 25px 5%; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 10px; letter-spacing: 1px; }
+        .logo i { color: var(--primary); filter: drop-shadow(0 0 10px var(--primary)); }
 
         /* --- Hero Section --- */
-        .hero { text-align: center; padding: 50px 20px; }
-        .hero h1 { font-size: 2.8rem; line-height: 1.2; margin-bottom: 15px; }
-        .hero h1 span { color: var(--primary); background: linear-gradient(120deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero { text-align: center; padding: 60px 20px; position: relative; }
+        .hero h1 { font-size: 3rem; line-height: 1.1; margin-bottom: 20px; font-weight: 800; }
+        .hero h1 span { 
+            background: linear-gradient(90deg, var(--primary), var(--accent)); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+        }
         .hero p { color: var(--text-muted); max-width: 500px; margin: 0 auto 30px; font-size: 1.1rem; }
+        .live-tag { 
+            font-size: 0.75rem; color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.2); 
+            padding: 5px 12px; border-radius: 20px; background: rgba(74, 222, 128, 0.1); display: inline-block; margin-bottom: 15px;
+        }
 
-        /* --- Features Grid --- */
-        section { padding: 40px 5%; margin-bottom: 10px; }
-        .section-title { text-align: center; margin-bottom: 30px; font-size: 1.8rem; }
+        /* --- Glass Cards --- */
+        section { padding: 40px 5%; }
+        .section-title { text-align: center; margin-bottom: 40px; font-size: 2rem; font-weight: 700; }
         
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
-        .card { background: var(--bg-card); padding: 25px; border-radius: 16px; border: 1px solid var(--border); text-align: center; transition: 0.3s; }
-        .card:hover { border-color: var(--primary); transform: translateY(-5px); }
-        .card i { font-size: 1.8rem; color: var(--primary); margin-bottom: 15px; display: block; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; }
+        .card { 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            padding: 30px 20px; border-radius: 24px; 
+            border: 1px solid var(--glass-border); text-align: center; 
+            transition: 0.4s; 
+        }
+        .card:hover { transform: translateY(-8px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(76, 201, 240, 0.15); }
+        .card i { font-size: 2rem; color: var(--primary); margin-bottom: 15px; }
         .card h3 { font-size: 1.1rem; margin-bottom: 5px; }
         .card p { font-size: 0.85rem; color: var(--text-muted); }
 
-        /* --- Ratings (Supabase) --- */
-        .rating-box { background: var(--bg-card); padding: 30px; border-radius: 20px; border: 1px solid var(--border); max-width: 600px; margin: 0 auto; text-align: center; }
-        .stars { font-size: 2.5rem; margin: 15px 0; cursor: pointer; color: #333; display: flex; justify-content: center; gap: 8px; }
-        .stars span.active { color: #facc15; text-shadow: 0 0 10px rgba(250, 204, 21, 0.3); }
+        /* --- Form & Ratings Box --- */
+        .glass-box { 
+            background: var(--glass-bg); backdrop-filter: blur(20px); 
+            padding: 30px; border-radius: 24px; border: 1px solid var(--glass-border); 
+            max-width: 600px; margin: 0 auto; 
+        }
+
+        .input-group { margin-bottom: 15px; }
+        .input-field { 
+            width: 100%; background: rgba(0,0,0,0.3); 
+            border: 1px solid var(--glass-border); color: white; 
+            padding: 15px; border-radius: 12px; outline: none; transition: 0.3s;
+        }
+        .input-field:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(76, 201, 240, 0.2); }
+
+        .stars { font-size: 2.2rem; margin: 10px 0 20px; cursor: pointer; display: flex; justify-content: center; gap: 10px; }
+        .stars span { transition: 0.2s; color: #444; }
+        .stars span.active { color: #facc15; transform: scale(1.2); filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.5)); }
         
-        textarea { width: 100%; background: #000; border: 1px solid var(--border); color: white; padding: 15px; border-radius: 12px; margin-top: 10px; resize: none; outline: none; }
-        textarea:focus { border-color: var(--primary); }
+        .btn-primary { 
+            background: linear-gradient(90deg, var(--primary), var(--accent)); 
+            color: white; border: none; padding: 15px; border-radius: 12px; 
+            width: 100%; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 10px;
+        }
+        .btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
+
+        /* Reviews List */
+        .reviews-list { margin-top: 30px; text-align: left; max-height: 400px; overflow-y: auto; }
+        .review-item { 
+            padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); 
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .btn-primary { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 10px; margin-top: 15px; width: 100%; font-weight: 600; cursor: pointer; transition: 0.3s; }
-        .btn-primary:hover { opacity: 0.9; }
+        .review-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .r-name { font-weight: 600; color: var(--primary); font-size: 0.95rem; }
+        .r-date { font-size: 0.75rem; color: #666; }
+        .r-stars { color: #facc15; font-size: 0.8rem; margin-bottom: 5px; }
+        .r-msg { font-size: 0.9rem; color: #ddd; line-height: 1.4; }
 
-        .reviews-list { margin-top: 30px; text-align: left; max-height: 350px; overflow-y: auto; padding-right: 5px; }
-        .review-item { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .review-header { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.8rem; color: #666; }
-
-        /* --- Contact Form --- */
-        .form-box { max-width: 600px; margin: 0 auto; background: var(--bg-card); padding: 30px; border-radius: 20px; border: 1px solid var(--border); }
-        .input-field { width: 100%; background: #000; border: 1px solid var(--border); color: white; padding: 12px; margin-bottom: 15px; border-radius: 10px; outline: none; }
-        .input-field:focus { border-color: var(--primary); }
-
-        /* --- Social Media Section Styles --- */
+        /* --- Social Media --- */
         .social-container { display: flex; flex-direction: column; gap: 15px; max-width: 500px; margin: 0 auto; }
         .social-link {
             display: flex; align-items: center; justify-content: center; gap: 15px;
             padding: 15px; border-radius: 15px; text-decoration: none;
             font-size: 1.1rem; font-weight: 600; color: white;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03);
+            transition: 0.3s;
         }
-        .social-link:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .social-link i { font-size: 1.5rem; }
-        
-        /* Brand Colors */
-        .wa-bg { background: linear-gradient(145deg, #1f2937, #0f172a); border-left: 4px solid #25D366; }
-        .wa-bg i { color: #25D366; }
-        
-        .tg-bg { background: linear-gradient(145deg, #1f2937, #0f172a); border-left: 4px solid #0088cc; }
-        .tg-bg i { color: #0088cc; }
-        
-        .ig-bg { background: linear-gradient(145deg, #1f2937, #0f172a); border-left: 4px solid #E1306C; }
-        .ig-bg i { color: #E1306C; }
+        .social-link:hover { transform: translateY(-5px); background: rgba(255,255,255,0.08); }
+        .wa i { color: #25D366; } .tg i { color: #0088cc; } .ig i { color: #E1306C; }
 
-        /* --- Bottom Navigation Dock --- */
-        .dock-container { position: fixed; bottom: 20px; left: 0; right: 0; display: flex; justify-content: center; z-index: 999; }
+        /* =========================================
+           FIXED NAVIGATION DOCK (100% WORKING)
+        ========================================= */
+        .dock-container { 
+            position: fixed; 
+            bottom: 25px; 
+            left: 0; 
+            right: 0; 
+            display: flex; 
+            justify-content: center; 
+            z-index: 1000; 
+            pointer-events: none; /* Allows clicking background behind dock */
+        }
+
         .dock {
-            background: var(--nav-bg); backdrop-filter: blur(12px);
-            border: 1px solid var(--border); border-radius: 24px; padding: 10px 25px;
-            display: flex; align-items: center; gap: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            pointer-events: auto;
+            background: var(--dock-bg);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px; 
+            padding: 0 20px; 
+            height: 70px;
+            display: flex; 
+            align-items: center; 
+            justify-content: space-evenly; /* Evenly spaces all 5 items */
+            width: 90%;
+            max-width: 420px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
         }
-        .nav-link { color: var(--text-muted); font-size: 1.4rem; transition: 0.3s; position: relative; }
-        .nav-link:hover, .nav-link.active { color: white; transform: translateY(-3px); }
 
-        /* Center Download Button */
+        .nav-link { 
+            color: #666; 
+            font-size: 1.4rem; 
+            transition: all 0.3s ease; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px; height: 45px;
+            border-radius: 50%;
+            text-decoration: none;
+        }
+
+        .nav-link:hover { 
+            color: white; 
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-5px);
+        }
+
+        /* Fixed Center Button - No more overlapping */
         .center-btn {
             background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white; text-decoration: none;
-            width: 55px; height: 55px; border-radius: 18px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.3rem; margin-top: -30px; /* Pop out effect */
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
-            border: 4px solid var(--bg-dark); transition: 0.3s;
+            color: white; 
+            width: 65px; 
+            height: 65px; 
+            border-radius: 50%;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 1.6rem; 
+            text-decoration: none;
+            
+            position: relative;
+            transform: translateY(-25px); /* Shifts it upwards cleanly */
+            flex-shrink: 0; /* Prevents button from getting squeezed */
+            
+            border: 6px solid var(--body-bg); /* Match body bg for cutout look */
+            box-shadow: 0 10px 20px rgba(76, 201, 240, 0.4);
+            transition: all 0.4s ease;
         }
-        .center-btn:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 30px rgba(99, 102, 241, 0.6); }
 
-        @media(max-width: 600px) { .hero h1 { font-size: 2.2rem; } .dock { gap: 20px; padding: 10px 20px; } }
+        /* Pulse Animation */
+        .center-btn::after {
+            content: ''; position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px;
+            border-radius: 50%; border: 2px solid var(--primary);
+            animation: ripple 2s infinite; opacity: 0;
+            z-index: -1;
+        }
+        @keyframes ripple { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.5); opacity: 0; } }
+
+        .center-btn:hover { 
+            transform: translateY(-30px) scale(1.1); 
+            box-shadow: 0 15px 30px rgba(76, 201, 240, 0.8);
+        }
+
+        @media(max-width: 600px) { 
+            .hero h1 { font-size: 2.5rem; } 
+            .dock { height: 65px; padding: 0 10px; max-width: 350px; } 
+            .nav-link { font-size: 1.2rem; width: 40px; height: 40px; }
+            .center-btn { width: 60px; height: 60px; font-size: 1.4rem; transform: translateY(-20px); border-width: 4px; }
+            .center-btn:hover { transform: translateY(-25px) scale(1.1); }
+        }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="logo"><i class="fa-solid fa-layer-group"></i> &nbsp; Prinaince Library </div>
+        <div class="logo"><i class="fa-solid fa-layer-group"></i> &nbsp; Shiv Verse</div>
     </div>
 
-    <!-- Home Section -->
+    <!-- Home -->
     <section id="home" class="hero">
-        <div style="font-size: 0.8rem; color: #4ade80; margin-bottom: 10px;">● Live from 2026</div>
+        <div class="live-tag">● Live from 2026</div>
         <h1>Unlock Your <br><span>True Potential</span></h1>
-        <p>The ultimate library app for students and readers . Free PDFs, Notes & Cloud Reader.</p>
+        <p>The ultimate library app for students. Free PDFs, Notes & Cloud Reader.</p>
     </section>
 
     <!-- Features -->
     <section id="features">
         <h2 class="section-title">Features</h2>
         <div class="grid">
-            <div class="card"><i class="fa-solid fa-book-open"></i><h3>Premium Books</h3><p>Access paid books. for free.</p></div>
-            <div class="card"><i class="fa-solid fa-highlighter"></i><h3>Study books</h3><p>free paid books pdfs.</p></div>
-            <div class="card"><i class="fa-solid fa-cloud-arrow-up"></i><h3>Cloud Library</h3><p>No any need of your phone storage.</p></div>
-            <div class="card"><i class="fa-solid fa-user-shield"></i><h3>Easy pdf preview </h3><p>No need to download books.</p></div>
+            <div class="card"><i class="fa-solid fa-book-open"></i><h3>Premium Books</h3><p>Access paid books for free.</p></div>
+            <div class="card"><i class="fa-solid fa-highlighter"></i><h3>Study Material</h3><p>Free paid books PDFs.</p></div>
+            <div class="card"><i class="fa-solid fa-cloud-arrow-up"></i><h3>Cloud Library</h3><p>Save phone storage.</p></div>
+            <div class="card"><i class="fa-solid fa-user-shield"></i><h3>PDF Preview</h3><p>Read without download.</p></div>
         </div>
     </section>
 
-    <!-- Reviews (Supabase) -->
+    <!-- Reviews (Updated with Name/Email) -->
     <section id="reviews">
         <h2 class="section-title">User Reviews</h2>
-        <div class="rating-box">
+        <div class="glass-box">
+            
+            <div class="input-group">
+                <input type="text" id="r-name-input" class="input-field" placeholder="Enter your Name" required>
+            </div>
+            <div class="input-group">
+                <input type="email" id="r-email-input" class="input-field" placeholder="Enter your Email" required>
+            </div>
+
             <div class="stars" id="star-container">
                 <span data-value="1">★</span><span data-value="2">★</span><span data-value="3">★</span><span data-value="4">★</span><span data-value="5">★</span>
             </div>
-            <textarea id="review-msg" rows="3" placeholder="Tell us what you liked..."></textarea>
+            
+            <textarea id="review-msg" class="input-field" rows="3" placeholder="Write your review here..."></textarea>
+            
             <button class="btn-primary" id="submitBtn" onclick="submitReview()">Post Rating</button>
-            <div class="reviews-list" id="reviews-display"><p style="color:#666;">Loading...</p></div>
+            
+            <div class="reviews-list" id="reviews-display">
+                <p style="color:#666; text-align:center; padding:10px;">Loading reviews...</p>
+            </div>
         </div>
     </section>
 
-    <!-- Contact Form (FormSubmit) -->
+    <!-- Contact Form -->
     <section id="contact">
         <h2 class="section-title">Feedback</h2>
-        <div class="form-box">
-            <!-- ⚠️ REPLACE WITH YOUR EMAIL -->
+        <div class="glass-box">
             <form action="https://formsubmit.co/prinshu.rajpoot16@gmail.com" method="POST" id="contactForm">
-                
-                <!-- Auto-Redirect Logic (JavaScript will fill this) -->
                 <input type="hidden" name="_next" id="redirectUrl" value="">
-                
                 <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_template" value="table">
                 
-                <input type="text" name="name" class="input-field" placeholder="Your Name" required>
-                <input type="email" name="email" class="input-field" placeholder="Your Email" required>
-                <textarea name="message" class="input-field" rows="4" placeholder="Your feedback" required></textarea>
-                <button type="submit" class="btn-primary" style="background: #222;">Send Message</button>
+                <input type="text" name="name" class="input-field" placeholder="Your Name" style="margin-bottom:15px;" required>
+                <input type="email" name="email" class="input-field" placeholder="Your Email" style="margin-bottom:15px;" required>
+                <textarea name="message" class="input-field" rows="4" placeholder="Your feedback" style="margin-bottom:15px;" required></textarea>
+                
+                <button type="submit" class="btn-primary" style="background: #222; border:1px solid #444;">Send Feedback</button>
             </form>
         </div>
     </section>
 
-    <!-- NEW SOCIAL MEDIA SECTION -->
+    <!-- Community -->
     <section id="community">
-        <h2 class="section-title">Join Community</h2>
+        <h2 class="section-title">Community</h2>
         <div class="social-container">
-            
-            <!-- WhatsApp Channel Link -->
-            <a href="https://whatsapp.com/channel/0029Vb7prcy6buMHfxPawC3V" target="_blank" class="social-link wa-bg">
+            <a href="https://whatsapp.com/channel/0029Vb7prcy6buMHfxPawC3V" target="_blank" class="social-link wa">
                 <i class="fa-brands fa-whatsapp"></i> Join WhatsApp Channel
             </a>
-
-            <!-- Telegram Channel Link -->
-            <a href="https://t.me/Prinaince_library" target="_blank" class="social-link tg-bg">
+            <a href="https://t.me/Prinaince_library" target="_blank" class="social-link tg">
                 <i class="fa-brands fa-telegram"></i> Join Telegram Channel
             </a>
-
-            <!-- Instagram Link -->
-            <a href="https://www.instagram.com/prince.rajpoot16?igsh=ZHpocnByd2R1Zzhl" target="_blank" class="social-link ig-bg">
+            <a href="https://www.instagram.com/prince.rajpoot16?igsh=ZHpocnByd2R1Zzhl" target="_blank" class="social-link ig">
                 <i class="fa-brands fa-instagram"></i> Follow on Instagram
             </a>
-
         </div>
     </section>
 
-    <!-- Privacy -->
-    <section id="privacy" style="text-align: center; opacity: 0.6; font-size: 0.8rem; margin-top: 20px;">
-        <p> @BY MR BLACKHEART</p>
-    </section>
+    <div style="text-align:center; margin-top:40px; opacity:0.5; font-size:0.8rem;">
+        <p>DESIGNED BY MR BLACKHEART</p>
+    </div>
 
-    <!-- BOTTOM DOCK NAVIGATION -->
+    <!-- FIXED NAVIGATION DOCK -->
     <div class="dock-container">
         <div class="dock">
             <a href="#home" class="nav-link"><i class="fa-solid fa-house"></i></a>
             <a href="#features" class="nav-link"><i class="fa-solid fa-bolt"></i></a>
             
-            <!-- ⚠️ DIRECT DOWNLOAD LINK HERE -->
+            <!-- Floating Download Button -->
             <a href="https://github.com/Prinaince/App/releases/download/Version/Prinaince.Library.apk" class="center-btn">
                 <i class="fa-solid fa-download"></i>
             </a>
@@ -221,23 +321,20 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        // --- 1. Auto-Detect Redirect URL for FormSubmit ---
-        // Ye code automatic pata lagayega ki website kaha chal rahi hai
-        // Aur thankyou.html par bhej dega.
+        // 1. Redirect URL Setup
         window.addEventListener('DOMContentLoaded', () => {
-            const currentOrigin = window.location.origin + window.location.pathname.replace('index.html', '');
-            // Removes trailing slash if exists to avoid double slash
-            const cleanOrigin = currentOrigin.replace(/\/$/, ""); 
+            const cleanOrigin = (window.location.origin + window.location.pathname.replace('index.html', '')).replace(/\/$/, ""); 
             document.getElementById('redirectUrl').value = cleanOrigin + '/thankyou.html';
         });
 
-        // --- 2. Supabase Configuration (⚠️ FILL THIS) ---
+        // 2. Supabase Config
         const SUPABASE_URL = 'https://tstijpefdjpgwufwbnkr.supabase.co'; 
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRzdGlqcGVmZGpwZ3d1ZndibmtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxOTgxMDAsImV4cCI6MjA4Mjc3NDEwMH0.HbDcceF0XRMnsAZznMJ5k7X0R9fIcGIF-5pXUh18bug';               
-
-        // --- 3. Supabase Logic ---
+        
         const { createClient } = supabase;
         const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // Stars Logic
         const stars = document.querySelectorAll('.stars span');
         let currentRating = 0;
 
@@ -250,48 +347,77 @@
             stars.forEach(s => s.classList.toggle('active', s.getAttribute('data-value') <= val));
         }
 
+        // 3. Load Reviews
         async function loadReviews() {
             const box = document.getElementById('reviews-display');
-            const { data, error } = await _supabase.from('ratings').select('*').order('created_at', { ascending: false }).limit(15);
+            const { data, error } = await _supabase
+                .from('ratings')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(20);
             
             box.innerHTML = '';
-            if(!data || data.length === 0) { box.innerHTML = '<small style="color:#555">No reviews yet. Be the first!</small>'; return; }
+            if(!data || data.length === 0) { 
+                box.innerHTML = '<small style="color:#aaa; display:block; text-align:center;">No reviews yet. Be the first!</small>'; 
+                return; 
+            }
 
             data.forEach(r => {
                 const date = new Date(r.created_at).toLocaleDateString();
+                const safeName = r.name ? r.name.replace(/</g, "&lt;") : "Anonymous";
+                const safeMsg = r.message ? r.message.replace(/</g, "&lt;") : "";
+                
                 box.innerHTML += `
                     <div class="review-item">
-                        <div class="review-header">
-                            <span style="color:#facc15">${"★".repeat(r.stars)}</span>
-                            <span>${date}</span>
+                        <div class="review-top">
+                            <span class="r-name">${safeName}</span>
+                            <span class="r-date">${date}</span>
                         </div>
-                        <p style="font-size:0.9rem; color:#eee;">${r.message.replace(/</g, "&lt;")}</p>
+                        <div class="r-stars">${"★".repeat(r.stars)}</div>
+                        <p class="r-msg">${safeMsg}</p>
                     </div>`;
             });
         }
 
+        // 4. Submit Review
         async function submitReview() {
-            const msg = document.getElementById('review-msg').value;
+            const nameInput = document.getElementById('r-name-input');
+            const emailInput = document.getElementById('r-email-input');
+            const msgInput = document.getElementById('review-msg');
             const btn = document.getElementById('submitBtn');
-            if(currentRating === 0 || !msg.trim()) return alert("Please give stars and write a review.");
+
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+            const msg = msgInput.value.trim();
+
+            if(currentRating === 0) return alert("Please give star rating!");
+            if(!name || !email || !msg) return alert("Please fill Name, Email and Message!");
 
             btn.innerText = "Posting...";
             btn.disabled = true;
 
-            const { error } = await _supabase.from('ratings').insert([{ stars: parseInt(currentRating), message: msg }]);
+            const { error } = await _supabase.from('ratings').insert([{ 
+                name: name,
+                email: email,
+                stars: parseInt(currentRating), 
+                message: msg 
+            }]);
 
             if(!error) {
-                document.getElementById('review-msg').value = "";
+                nameInput.value = ""; emailInput.value = ""; msgInput.value = "";
                 updateStars(0); currentRating = 0;
-                loadReviews();
-                btn.innerText = "Review Posted!";
+                
+                loadReviews(); 
+                btn.innerText = "Posted Successfully!";
                 setTimeout(() => { btn.innerText = "Post Rating"; btn.disabled = false; }, 2000);
             } else {
-                alert("Error submitting. Try again.");
+                console.error(error);
+                alert("Error! Check console.");
                 btn.innerText = "Post Rating";
                 btn.disabled = false;
             }
         }
+        
         window.onload = loadReviews;
     </script>
 </body>
